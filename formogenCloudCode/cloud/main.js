@@ -19,7 +19,7 @@ Parse.Cloud.beforeSave("RemoteRecipient", function(request, response)
 	else
 	{
 		var query = new Parse.Query(RemoteRecipient);
-		query.equalTo("email", request.objet.get("email"));
+		query.equalTo("email", request.object.get("email"));
 		query.first
 		({
 			success: function(object)
