@@ -1,0 +1,11 @@
+{
+    "applications": {
+        "_default": {
+            "link": "formogen"
+        }, 
+        "formogen": {
+            "applicationId": "UA6XmkHxENEgB3xx1ahGHvvuTFnOhgTgyU1Dzys6", 
+            "masterKey": "ARjjaIrucaofrRSNHMhqoC44sHxZwPloymaaLFmF"
+        }
+    }
+}
