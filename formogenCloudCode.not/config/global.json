@@ -1,0 +1,69 @@
++ (NSOperationQueue*) sharedQueue
+{
+    static NSOperationQueue* sharedQueue = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, 
+    ^{
+        sharedQueue = [[NSOperationQueue alloc] init];
+    });
+    
+    return sharedQueue;
+}
+
+#pragma mark - Queue Commands
+
+- (void) createRemoteShareInfo:(Recipient*)recip
+{
+//    Recipient* lRecip = recip;
+//    SEL sel = @selector(writeRemoteShareInfo:);
+//    NSMethodSignature* ms = [Recipient instanceMethodSignatureForSelector:sel];
+//    NSInvocation* inv = [NSInvocation invocationWithMethodSignature:ms];
+//    [inv setSelector:sel];
+//    [inv setTarget:self];
+//    [inv setArgument:&lRecip atIndex:2];
+//    NSInvocationOperation* op2 = [[NSInvocationOperation alloc] initWithInvocation:inv];
+    
+    NSInvocationOperation* op = [[NSInvocationOperation alloc] initWithTarget:self selector:@selector(writeRemoteShareInfo:) object:recip];
+    
+    [self enqueueOperation:op];
+}
+
+#pragma mark - Tasks
+
+- (void) writeRemoteShareInfo:(Recipient*)recip
+{
+    //create a local Parse object to save
+    PFObject* rShare = [PFObject objectWithClassName:RemoteShareInfo_RemoteClass];
+    
+    [rShare setObject:[NSNumber numberWithBool:NO] forKey:IsConnected_RemoteField];
+    [rShare setObject:[NSNumber numberWithBool:NO] forKey:IsLocked_RemoteField];
+    [rShare setObject:[NSNumber numberWithBool:NO] forKey:IsPro_RemoteField];
+    [rShare setObject:[NSNumber numberWithBool:NO] forKey:IsWithdrawn_RemoteField];
+    [rShare setObject:[recip email] forKey:RecipientEmail_RemoteField];
+    [rShare setObject:[[recip shareInfo] shareGID] forKey:ShareGID_RemoteField];
+    
+    //save the local Parse object
+    NSError* error;
+    [rShare save:&error];
+    if (error)
+    {
+        NSLog(@"Error - createRemoteShareInfo: %@", [[error userInfo] objectForKey:@"error"]);
+    }
+//    [rShare saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+//        if (!succeeded)
+//        {
+//            NSLog(@"Error - createRemoteShareInfo: %@", [[error userInfo] objectForKey:@"error"]);
+//        }
+//    }];
+}
+
+#pragma mark - Helpers
+
+- (void) enqueueOperation:(NSOperation*)operation
+{
+    if ([[[FFParseController sharedQueue] operations] count])
+    {
+        [operation addDependency:[[[FFParseController sharedQueue] operations] lastObject]];
+    }
+    [[FFParseController sharedQueue] addOperation:operation];
+}
