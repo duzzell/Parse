@@ -8,44 +8,17 @@
 //Push Notifications
 
 //recipientDidConnect
+//recipientDidDisconnect
 //recipientDidUpdateForm
 //recipientDidDeleteForm
-//Params: (senderEmail, recipientEmail, shareID, message)
-Parse.Cloud.define("pushToSender", function(request, response)
-{
-	var pushQuery = new Parse.Query(Parse.Installation);
-	pushQuery.equalTo("email", request.params.senderEmail);
-	
-	Parse.Push.send(
-	{ 
-		where: pushQuery,
-		data:
-		{
-			alert: request.params.message,
-			badge: "Increment",
-			target: request.params.recipientEmail,
-			share: request.params.shareID
-		}
-	},
-	{
-		success: function()
-		{
-			//push successful
-		},
-		error: function(error)
-		{
-			//push error
-		}
-	});
-});
-
 //senderDidLockForm
+//senderDidUnlockForm
 //senderDidDeleteForm
-//Params: (recipientEmail, shareID, message)
-Parse.Cloud.define("pushToRecipient", function(request, response)
+//Params: (targetEmail, originEmail, shareID, message)
+Parse.Cloud.define("formogenPush", function(request, response)
 {
 	var pushQuery = new Parse.Query(Parse.Installation);
-	pushQuery.equalTo("email", request.params.recipientEmail);
+	pushQuery.equalTo("email", request.params.targetEmail);
 	
 	Parse.Push.send(
 	{ 
@@ -54,7 +27,7 @@ Parse.Cloud.define("pushToRecipient", function(request, response)
 		{
 			alert: request.params.message,
 			badge: "Increment",
-			target: request.params.recipientEmail,
+			origin: request.params.originEmail,
 			share: request.params.shareID
 		}
 	},
@@ -69,7 +42,6 @@ Parse.Cloud.define("pushToRecipient", function(request, response)
 		}
 	});
 });
-
 
 //Triggers
 //before RSI delete
