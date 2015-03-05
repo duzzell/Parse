@@ -43,33 +43,3 @@ Parse.Cloud.define("formogenPush", function(request, response)
 	});
 });
 
-//Triggers
-//before RSI delete
-//if RSI.wantsDelete is false, set it true, save it, do not delete it
-//if RSI.wantsDelete is true, delete it
-Parse.Cloud.beforeDelete("RemoteShareInfo", function(request, response)
-{
-	query = new Parse.Query("RemoteShareInfo");
-	query.equalTo("recipientEmail", request.object.recipientEmail);
-	query.equalTo("shareID", request.object.shareID);
-	query.first(
-	{
-		success: function(remoteShareInfo)
-		{
-			if (remoteShareInfo.wantsDelete)
-			{
-				response.success();
-			}
-			else
-			{
-				response.error();
-				remoteShareInfo.wantsDelete = true;
-				remoteShareInfo.save();
-			}
-		},
-		error: function(error)
-		{
-			response.error("Error " + error.code + " : " + error.message + " when getting RemoteShareInfo.");
-		}
-	});
-});
