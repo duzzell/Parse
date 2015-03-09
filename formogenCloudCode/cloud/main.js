@@ -32,13 +32,13 @@ Parse.Cloud.define("formogenPush", function(request, response)
 		}
 	},
 	{
-		success: function()
+		success: function(results)
 		{
-			//push successful
+			response.success("push successful");
 		},
 		error: function(error)
 		{
-			//push error
+			response.error("push error");
 		}
 	});
 });
