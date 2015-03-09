@@ -18,21 +18,22 @@
 Parse.Cloud.define("formogenPush", function(request, response)
 {
 	var pushQuery = new Parse.Query(Parse.Installation);
-	pushQuery.equalTo("email", request.params.targetEmail);
+	pushQuery.equalTo("email", request.params.target);
 	
 	Parse.Push.send(
 	{ 
 		where: pushQuery,
 		data:
 		{
-			alert: request.params.message,
+			alert: request.params.alert,
 			badge: "Increment",
-			origin: request.params.originEmail,
-			share: request.params.shareID
+			origin: request.params.origin,
+			shareID: request.params.shareID,
+			action: request.params.action
 		}
 	},
 	{
-		success: function(results)
+		success: function()
 		{
 			response.success("push successful");
 		},
