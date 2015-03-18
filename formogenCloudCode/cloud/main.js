@@ -14,20 +14,20 @@
 //senderDidLockForm
 //senderDidUnlockForm
 //senderDidDeleteForm
-//Params: (targetEmail, originEmail, shareID, message)
+//Params: (targetEmail, originEmail, shareID, action, message)
 Parse.Cloud.define("formogenPush", function(request, response)
 {
 	var pushQuery = new Parse.Query(Parse.Installation);
-	pushQuery.equalTo("email", request.params.target);
+	pushQuery.equalTo("email", request.params.targetEmail);
 	
 	Parse.Push.send(
 	{ 
 		where: pushQuery,
 		data:
 		{
-			alert: request.params.alert,
+			alert: request.params.message,
 			badge: "Increment",
-			origin: request.params.origin,
+			origin: request.params.originEmail,
 			shareID: request.params.shareID,
 			action: request.params.action
 		}
