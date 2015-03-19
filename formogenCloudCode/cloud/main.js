@@ -7,13 +7,6 @@
 
 //Push Notifications
 
-//recipientDidConnect
-//recipientDidDisconnect
-//recipientDidUpdateForm
-//recipientDidDeleteForm
-//senderDidLockForm
-//senderDidUnlockForm
-//senderDidDeleteForm
 //Params: (targetEmail, originEmail, shareID, action, message)
 Parse.Cloud.define("formogenPush", function(request, response)
 {
@@ -27,7 +20,7 @@ Parse.Cloud.define("formogenPush", function(request, response)
 		{
 			alert: request.params.message,
 			badge: "Increment",
-			origin: request.params.originEmail,
+			originEmail: request.params.originEmail,
 			shareID: request.params.shareID,
 			action: request.params.action
 		}
